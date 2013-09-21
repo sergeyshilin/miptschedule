@@ -17,10 +17,20 @@
 			</br>
 			Сезон:&nbsp;&nbsp; 
 			<select name="season">
-				<option selected>Осень</option>
-				<option>Весна</option>
+				<option selected value="autumn">Осень</option>
+				<option value="spring">Весна</option>
 			</select>
 			</br>
+			Курс:&nbsp;&nbsp;&nbsp;&nbsp;
+			<select name="course">
+				<option selected>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option>5</option>
+				<option>6</option>
+			</select>
+		</br>
 			Файл:&nbsp;&nbsp;&nbsp;
 			<input type="file" name="xls" value="Выберете файл"></br></br>
 			<input type="submit" name="xlsdownload" value="Отправить на обработку">
@@ -28,16 +38,14 @@
 		<?php 
 			if(isset($_POST) && !empty($_POST['xlsdownload'])) {
 				require_once('utils/XLSParser.php');
-				$parser = new XLSParser($_FILES['xls'], $_POST['year'], $_POST['season']);
-				// $parser->xlsToSQL();
+				$parser = new XLSParser($_FILES['xls'], $_POST['year'], $_POST['season'], $_POST['course']);
+				$parser->xlsToSQL();
 				if($parser->isError()) {
 					$parser->printError();
 				} else {
-					echo "ALL is OK";
+					echo "Выполнено!";
 				}
-			} else {
-				echo "no post";
-			} 
+			}
 		?>
 	</body>
 </html>
