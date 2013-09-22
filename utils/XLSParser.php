@@ -1,16 +1,16 @@
 <?php 
 
-	set_time_limit (600);
+	set_time_limit (1000);
 	header('Content-type:text/html; charset=utf-8');
 
 	class XLSParser {
 
 		private $error;
 		private $file;
-		private $name;
+		// private $name;
 		private $course;
 		const PATHDIR = "schedules/";
-		const FIRSTROW = 5;
+		const FIRSTROW = 4;
 		const FIRSTCOLUMN = 'C';
 
 		public function __construct($file, $year, $season, $course) {
@@ -22,19 +22,19 @@
 			$this->file = $file;
 			$this->course = $course;
 			// $this->name = self::PATHDIR . $year . "_" . $season . "_" . $course . $this->getExtention($file['name']);
-			$this->name = "schedules/2013-2014_autumn_3.xls";
+			// $this->name = "schedules/2013-2014_autumn_3.xls";
 			// $this->saveXLSFile();
 		}
 
-		public function xlsToSQL() {
+		public function xlsToSQL($course, $name) {
 			try {
-			    $inputFileType = PHPExcel_IOFactory::identify($this->name);
+			    $inputFileType = PHPExcel_IOFactory::identify($name);
 			    $objReader = PHPExcel_IOFactory::createReader($inputFileType);
 				$objReader->setReadDataOnly(false);
-			    $objPHPExcel = $objReader->load($this->name);
+			    $objPHPExcel = $objReader->load($name);
 			    unset($objReader);
 			} catch(Exception $e) {
-			    die('Error loading file "'.pathinfo($this->name, PATHINFO_BASENAME).'": '.$e->getMessage());
+			    die('Error loading file "'.pathinfo($name, PATHINFO_BASENAME).'": '.$e->getMessage());
 			}
 
 			$sheet = $objPHPExcel->getActiveSheet();
@@ -43,22 +43,23 @@
 			$lastcol = $sheet->getHighestColumn();
 
 			for ($column = PHPExcel_Cell::columnIndexFromString(self::FIRSTCOLUMN) - 1; 
-					$column < PHPExcel_Cell::columnIndexFromString('C'); 
+					$column < PHPExcel_Cell::columnIndexFromString($lastcol); 
 						$column++) { 
 				if(!is_numeric($this->getCellValue($sheet, $column, self::FIRSTROW)))
 					continue;
 				for($row = self::FIRSTROW; $row <= $lastrow; $row++) {					
 					$cell = $this->getCellValue($sheet, $column, $row);
-					$this->addCellToSQL($sheet, $cell, $column, $row);
+					$this->addCellToSQL($sheet, $course, $cell, $column, $row);
 				}
 			}
+			echo $name . " SUCCESS!</br>";
 		}
 
-		private function addCellToSQL($sheet, $cell, $column, $row) {
+		private function addCellToSQL($sheet, $course, $cell, $column, $row) {
 			$c = mysql_connect(SQLConfig::SERVERNAME, SQLConfig::USER, SQLConfig::PASSWORD);
 			mysql_select_db(SQLConfig::DATABASE);
 			if($row == self::FIRSTROW && is_numeric($cell) && !mysql_fetch_array(mysql_query("SELECT * FROM `groups` WHERE `number` = {$cell}"))) {
-				$result = mysql_query("INSERT INTO `groups` (`course`, `number`) VALUES ('3', '{$cell}') ");
+				$result = mysql_query("INSERT INTO `groups` (`course`, `number`) VALUES ('{$course}', '{$cell}') ");
 				if(!$result) {
 					die('Не могу добавить запись в БД: ' . mysql_error());
 				}

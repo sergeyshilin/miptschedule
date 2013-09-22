@@ -39,7 +39,12 @@
 			if(isset($_POST) && !empty($_POST['xlsdownload'])) {
 				require_once('utils/XLSParser.php');
 				$parser = new XLSParser($_FILES['xls'], $_POST['year'], $_POST['season'], $_POST['course']);
-				$parser->xlsToSQL();
+				$parser->xlsToSQL('4', "schedules/2013-2014_autumn_4.xls");
+				// $parser->xlsToSQL('1', "schedules/2013-2014_autumn_1.xls");
+				// $parser->xlsToSQL('2', "schedules/2013-2014_autumn_2.xls");
+				// $parser->xlsToSQL('3', "schedules/2013-2014_autumn_3.xls");
+				// $parser->xlsToSQL('5', "schedules/2013-2014_autumn_5.xls");
+				// $parser->xlsToSQL('6', "schedules/2013-2014_autumn_6.xls");
 				if($parser->isError()) {
 					$parser->printError();
 				} else {
