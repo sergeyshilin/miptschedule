@@ -22,20 +22,48 @@
 		}
 
 		public function printWeekSchedule() {
+			echo "<ul class=\"schedule-row\">";
 			for ($i = 0; $i < count($this->week); $i++) { 
-				$this->printScheduleForDay($i + 1);
-				echo "</br></br>";
+				$day = $i + 1;
+
+				if($day == 4) {
+					echo "</ul>";
+					echo "<ul class=\"schedule-row\">";
+				}
+
+				$daySchedule = $this->week[$day];
+				echo "<li id=\"{$day}\">";
+				echo "<div class=\"day\">";
+				echo "<div class=\"dayname\">".ScheduleUtils::getDayName($day)."</div>";
+				for ($j = 0; $j < count($daySchedule); $j++) { 
+					$class = $daySchedule[$j];
+					echo "<div class=\"pair\">";
+					echo "<div class=\"pairtime\">".ScheduleUtils::getPairTime($class["pair"])."</div>";
+					echo "<div class=\"pairname\">".$class["name"]."</div>";
+					echo "</div>";
+				}
+				echo "</div>";
+				echo "</li>";
 			}
+			echo "</ul>";
 		}
 
-		public function printScheduleForDay($day) {
-			echo ScheduleUtils::getDayName($day)."</br>";
-			$daySchedule = $this->week[$day];
-			for ($i = 0; $i < count($daySchedule); $i++) { 
-				$class = $daySchedule[$i];
-				echo "1.\t" . ScheduleUtils::getPairTime($class["pair"]);
-				echo "\t" . $class["name"] . "</br>";
-			}
-		}
+		// public function printScheduleForDay($day) {
+		// 	echo "<li class=\"day\">";
+		// 	echo "<div>";
+		// 	echo "<div class=\"dayname\">";
+		// 	echo ScheduleUtils::getDayName($day);
+		// 	echo "</div>";
+		// 	$daySchedule = $this->week[$day];
+		// 	for ($i = 0; $i < count($daySchedule); $i++) { 
+		// 		$class = $daySchedule[$i];
+		// 		echo "<div class=\"pair\">";
+		// 		echo "<div class=\"pairtime\">".ScheduleUtils::getPairTime($class["pair"])."</div>";
+		// 		echo "\t" . $class["name"] . "</br>";
+		// 		echo "</div>";
+		// 	}
+		// 	echo "</div>";
+		// 	echo "</li>";
+		// }
 	}
 ?>
