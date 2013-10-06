@@ -9,8 +9,8 @@
 		private $week;
 		
 		public function __construct($group) {
-			require_once('Schedule.php');
-			require_once('utils/ScheduleUtils.php');
+			require_once('/home/snape/projects/mipt-schedule/classes/Schedule.php');
+			require_once('/home/snape/projects/mipt-schedule/utils/ScheduleUtils.php');
 
 			$this->group = $group;
 			$this->schedule = new Schedule($this->group);

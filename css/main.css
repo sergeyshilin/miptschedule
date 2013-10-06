@@ -85,6 +85,13 @@ html, body {
 	background: url('../images/group-button-hover.png') no-repeat center !important;
 }
 
+#loader {
+	width: 400px;
+	height: 300px;
+	margin: 0 auto;
+	background-image: url('../images/loader.gif') 
+}
+
 /**
  * MAIN BODY
  */

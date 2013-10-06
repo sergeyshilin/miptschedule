@@ -8,7 +8,7 @@
 		private $week = array(1 => array(), 2 => array(), 3 => array(), 4 => array(), 5 => array(), 6 => array());
 		
 		public function __construct($group) {
-			require_once('utils/SQLConfig.php');
+			require_once('/home/snape/projects/mipt-schedule/utils/SQLConfig.php');
 			$this->group = $group;
 			$this->selectFromSQL();
 		}
