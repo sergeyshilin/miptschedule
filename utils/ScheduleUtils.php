@@ -11,6 +11,8 @@
 							 "1530-1655" => 5, "1705-1830" => 6, "1830-1950" => 7, 1 => "9:00 - 10:25", 2 => "10:45 - 12:10",
 							  3 => "12:20 - 13:45", 4 => "13:55 - 15:20", 5 => "15:30 - 16:55", 6 => "17:05 - 18:30", 7 => "18:30 - 19:50");
 
+		public static $colors = array("FFFF99" => "#FFFF99", "CCFFFF" => "#CCFFFF", "FF99CC" => "#FF99FF", "CCFFCC" => "#E6FAFF");
+
 		/**
 		 * Get the number of the day by its name
 		 * @param  string $name 	name of the day
@@ -45,6 +47,15 @@
 		 */
 		public static function getPairTime($pair) {
 			return self::$pairs[$pair];
+		}
+
+		/**
+		 * get cell 'safe' color by its original color
+		 * @param  string $color 	original color
+		 * @return string $ncolor	new color
+		 */
+		public static function getCellColor($color) {
+			return self::$colors[$color];
 		}
 
 	}

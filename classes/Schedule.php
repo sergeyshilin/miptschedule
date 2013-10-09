@@ -20,7 +20,8 @@
 			$result = mysql_query("SELECT * FROM `classes` WHERE `group` = {$this->group}");
 
 			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-				$dayarray = array("pair" => $row['pair'], "name" => $row['name'], "room" => $row['room'], "prep" => $row['prep']);
+				$dayarray = array("pair" => $row['pair'], "name" => $row['name'], "room" => $row['room'], 
+					"prep" => $row['prep'], "color" => ScheduleUtils::getCellColor($row['color']), "half" => $row['half']);
 				array_push($this->week[$row['day']], $dayarray);
 			}
 		}

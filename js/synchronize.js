@@ -44,11 +44,12 @@ function syncSelect(_faculty, _course) {
         	var group = document.getElementById("group");
             group.innerHTML = "";
 			for (var i = 0; i < jsArr.length; i++) {
+                // console.log(jsArr[i]);
                 var input = document.createElement("input");
                 input.setAttribute("type", "button");
                 input.setAttribute("name", jsArr[i]);
                 input.setAttribute("value", jsArr[i]);
-                input.setAttribute("onClick", "getData(" + jsArr[i] +")");
+                input.setAttribute("onClick", "getData(\"" + jsArr[i] + "\")");
                 group.appendChild(input);
 			};
         },
@@ -61,9 +62,11 @@ function syncSelect(_faculty, _course) {
 }
 
 function getData(_group) {
+    // console.log("group: " + _group);
     group = _group;
     var inputs = document.getElementById("group").getElementsByTagName("input");
     for (var i = 0; i < inputs.length; i++) {
+        // console.log("name: " + inputs[i].name);
         if(inputs[i].name == group) {
             inputs[i].className = "group-hover";    
         } else if(inputs[i].name == prevgroup) {

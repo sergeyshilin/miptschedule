@@ -35,17 +35,56 @@
 				echo "<li id=\"{$day}\">";
 				echo "<div class=\"day\">";
 				echo "<div class=\"dayname\">".ScheduleUtils::getDayName($day)."</div>";
-				for ($j = 0; $j < count($daySchedule); $j++) { 
+
+				$half = 0;
+				$pair = 0;
+
+				for ($j = 0; $j < count($daySchedule); $j++) {
 					$class = $daySchedule[$j];
-					echo "<div class=\"pair\">";
-					echo "<div class=\"pairtime\">".ScheduleUtils::getPairTime($class["pair"])."</div>";
-					echo "<div class=\"pairname\">".$class["name"]."</div>";
-					echo "</div>";
+
+					if($half = 1 && $class["half"] == 1 && $class["pair"] == $pair) {
+						$half = 0;
+						$this->printSecondHalfOfPair($class);
+					} 
+
+					if($class["half"] == 1 && $class["pair"] != $pair) {
+						$half = 1;
+						$pair = $class["pair"];
+						$this->printFirstHalfOfPair($class);
+					} 
+
+					if($class["half"] == 0 && $half == 0) {
+						$this->printUsuallyPair($class);
+					}
+
 				}
 				echo "</div>";
 				echo "</li>";
 			}
 			echo "</ul>";
+		}
+
+		private function printFirstHalfOfPair($class) {
+			echo "<div class=\"pair\">";
+			echo "<div class=\"pairtime\" style=\"border-bottom:none !important\">"; 
+			echo ScheduleUtils::getPairTime($class["pair"]); 
+			echo "</div>";
+			echo "<div class=\"pairname\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
+			echo "</div>";
+		}
+
+		private function printSecondHalfOfPair($class) {
+			echo "<div class=\"pair\">";
+			echo "<div class=\"pairtime\"></div>";
+			echo "<div class=\"pairname\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
+			echo "</div>";
+		}
+
+		private function printUsuallyPair($class) {
+			echo "<div class=\"pair\">";
+			echo "<div class=\"pairtime\">" . ScheduleUtils::getPairTime($class["pair"]) . "</div>";
+			echo "<div class=\"pairname\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
+			echo "</div>";
 		}
 
 		// public function printScheduleForDay($day) {

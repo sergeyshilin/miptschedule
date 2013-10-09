@@ -1,16 +1,16 @@
 <?php 
 
-	set_time_limit (1000);
+	set_time_limit (30000);
 	header('Content-type:text/html; charset=utf-8');
 
 	class XLSParser {
 
 		private $error;
 		private $file;
-		// private $name;
 		private $course;
+		private $connection;
 		const PATHDIR = "schedules/";
-		const FIRSTROW = 4;
+		const FIRSTROW = 5;
 		const FIRSTCOLUMN = 'C';
 
 		public function __construct($file, $year, $season, $course) {
@@ -21,12 +21,37 @@
 			$this->error = NULL;
 			$this->file = $file;
 			$this->course = $course;
+			$this->half = 0;
+
+			$this->setConnection();
 			// $this->name = self::PATHDIR . $year . "_" . $season . "_" . $course . $this->getExtention($file['name']);
 			// $this->name = "schedules/2013-2014_autumn_3.xls";
 			// $this->saveXLSFile();
 		}
 
+		public function __destruct() {
+			$this->closeConnection();
+		}
+
+		private function setConnection() {
+			$this->connection = mysql_connect(SQLConfig::SERVERNAME, SQLConfig::USER, SQLConfig::PASSWORD);
+			mysql_select_db(SQLConfig::DATABASE);
+		}
+
+		private function closeConnection() {
+			mysql_close($this->connection);
+		}
+
+		private function clearDataBase($course) {
+			$result = mysql_query("DELETE FROM `classes` WHERE `group` IN (SELECT `number` from `groups` WHERE `course` = {$course})");
+				if(!$result) {
+					die('Can\'t remove lines from database: ' . mysql_error());
+				}
+			echo "Databese for " . $course . " course was successfully cleared </br>";
+		}
+
 		public function xlsToSQL($course, $name) {
+			$this->clearDataBase($course);
 			try {
 			    $inputFileType = PHPExcel_IOFactory::identify($name);
 			    $objReader = PHPExcel_IOFactory::createReader($inputFileType);
@@ -56,31 +81,57 @@
 		}
 
 		private function addCellToSQL($sheet, $course, $cell, $column, $row) {
-			$c = mysql_connect(SQLConfig::SERVERNAME, SQLConfig::USER, SQLConfig::PASSWORD);
-			mysql_select_db(SQLConfig::DATABASE);
-			if($row == self::FIRSTROW && is_numeric($cell) && !mysql_fetch_array(mysql_query("SELECT * FROM `groups` WHERE `number` = {$cell}"))) {
-				$result = mysql_query("INSERT INTO `groups` (`course`, `number`) VALUES ('{$course}', '{$cell}') ");
+			if($row == self::FIRSTROW && is_numeric($cell) && (mysql_num_rows(mysql_query("SELECT * FROM `groups` WHERE `number` = '{$cell}'")) == 0)) {
+				echo "Добавляю в базу... </br>";
+				$query = sprintf("INSERT INTO `groups` (`course`, `number`) VALUES ('{$course}', '{$cell}') ");
+				$result = mysql_query($query);
 				if(!$result) {
 					die('Не могу добавить запись в БД: ' . mysql_error());
 				}
-			} else if(!is_numeric($cell) && $row != self::FIRSTROW){
+			} else if(!is_numeric($cell) && $row != self::FIRSTROW) {
 				$group = $this->getCellValue($sheet, $column, self::FIRSTROW);
 				$dayval = $this->getCellValue($sheet, 'A', $row);
 				$pairval = $this->getCellValue($sheet, 'B', $row);
 				if(!empty($dayval) && !empty($pairval)) {
+					$ishalf = 0;
 					$day = ScheduleUtils::getDayNumber($this->getCellValue($sheet, 'A', $row));
-					$pair = ScheduleUtils::getPairNumber($this->getCellValue($sheet, 'B', $row));
-					mysql_query("SET names cp1251");
-					$cell = iconv("utf-8", "windows-1251", $cell);
-					if(!mysql_fetch_array(mysql_query("SELECT * FROM `classes` 
-							WHERE `day` = '{$day}' AND `pair` = '{$pair}' AND `name` = '{$cell}' AND `group` = '{$group}' AND `room` = 1 AND `prep` = 1"))) {
-						$result = mysql_query("INSERT INTO `classes` (`day`, `pair`, `name`, `group`, `room`, `prep`) VALUES ('{$day}', '{$pair}', '{$cell}', '{$group}', 1, 1)");
-						if(!$result) {
-							die('Не могу добавить запись в БД: ' . mysql_error());
+					$time = ScheduleUtils::getPairNumber($this->getCellValue($sheet, 'B', $row));
+
+					$nextdayval = $this->getCellValue($sheet, 'A', $row + 1);
+					$nextpairval = $this->getCellValue($sheet, 'B', $row + 1);
+					$nextcell = $this->getCellValue($sheet, $column, $row + 1);
+
+					if($this->half == 1) {
+						$ishalf = 1;
+						$this->half = 0;
+					}
+
+					if(!empty($nextdayval) && !empty($nextpairval)) {
+						$nexttime = ScheduleUtils::getPairNumber($this->getCellValue($sheet, 'B', $row+1));	
+						if($nexttime == $time && strcmp($cell, $nextcell) != 0) {
+							$ishalf = 1;
+							$this->half = 1;
 						}
 					}
+
+					$color = $sheet->getStyle(PHPExcel_Cell::stringFromColumnIndex($column).$row)->getFill()->getStartColor()->getRGB();
+					mysql_query("SET names cp1251");
+					$cell = iconv("utf-8", "windows-1251", $cell);
+					$this->writeToSQL($day, $time, $cell, $group, $color, $ishalf);
 				}
 				
+			}
+		}
+
+		private function writeToSQL($day, $time, $cell, $group, $color, $half) {
+			if(mysql_num_rows(mysql_query("SELECT * FROM `classes` WHERE `day` = '{$day}' AND `pair` = '{$time}' 
+				AND `name` = '{$cell}' AND `group` = '{$group}'")) == 0) {
+					$query = sprintf("INSERT INTO `classes` VALUES (null, '{$day}', '{$time}', '{$cell}', 
+						'{$group}', 1, 1, '{$color}', {$half})");
+					$result = mysql_query($query);
+					if(!$result) {
+						die('Не могу добавить запись в БД: ' . mysql_error());
+					}
 			}
 		}
 
@@ -107,13 +158,13 @@
 	        }
 
 	        $val = $cell->getValue();
-	        if(PHPExcel_Shared_Date::isDateTime($cell)) {
-	             $val = date($format, PHPExcel_Shared_Date::ExcelToPHP($val)); 
-	        }
+	        // if(PHPExcel_Shared_Date::isDateTime($cell)) {
+	        //      $val = date($format, PHPExcel_Shared_Date::ExcelToPHP($val)); 
+	        // }
 	        
-	        if((substr($val,0,1) === '=' ) && (strlen($val) > 1)){
-	            $val = $cell->getOldCalculatedValue();
-	        }
+	        // if((substr($val,0,1) === '=' ) && (strlen($val) > 1)){
+	        //     $val = $cell->getOldCalculatedValue();
+	        // }
 
 	        return $val;
     	}

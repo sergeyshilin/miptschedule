@@ -3,7 +3,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="title" content="Физтех - Расписание" />
+		<meta name="author" content="Sergey Shilin" />
+		<meta name="Designer" content="Sergey Shilin" />
+		<meta name="Publisher" content="Sergey Shilin" />
+		<meta name="keywords" content="расписание мфти, расписание, мфти, schedule, mipt, физтех, физтех расписание" />
+		<meta name="description" content="Расписание МФТИ" />
+		<meta name="Publisher-URL" content="http://mipt-schedule.ru" />
+		<meta name="Publisher-Email" content="snape@liceum8.ru" />
+		<meta http-equiv="Reply-to" content="snape@liceum8.ru" />
+		<meta name="revisit-after" content="1 weeks" />
+		<meta name="robots" content="all" />
+		<meta http-equiv="content-language" content="Russian" />
+		<meta name="distribution" content="Local" />
 		<script type="text/javascript" language="JavaScript" src="js/synchronize.js"></script>
 		<script type="text/javascript" language="JavaScript" src="js/jquery-1.7.2.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/main.css">
