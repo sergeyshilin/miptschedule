@@ -14,9 +14,7 @@
 			$faculty = substr($group, 1,2);
 		}
 		$result2 = mysql_query("UPDATE `groups` SET `faculty` = '{$faculty}' WHERE `id` = '{$id}'");
-		if($result2) {
-			echo "ok";
-		} else {
+		if(!$result2) {
 			echo $faculty."</br>";
 			echo $group."</br>";
 			echo $day."</br>";
@@ -25,4 +23,5 @@
 			die('Не обновиться: ' . mysql_error());
 		}
 	}
+	echo "Groups database was successfully updated!";
 ?>

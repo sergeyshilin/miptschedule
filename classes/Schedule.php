@@ -17,7 +17,7 @@
 			$connect = mysql_connect(SQLConfig::SERVERNAME, SQLConfig::USER, SQLConfig::PASSWORD);
 			mysql_select_db(SQLConfig::DATABASE);
 			mysql_query("SET names utf8");
-			$result = mysql_query("SELECT * FROM `classes` WHERE `group` = {$this->group}");
+			$result = mysql_query("SELECT * FROM `classes` WHERE `group` = '{$this->group}'");
 
 			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 				$dayarray = array("pair" => $row['pair'], "name" => $row['name'], "room" => $row['room'], 
