@@ -1,4 +1,4 @@
-miptschedule
+MIPT Schedule
 ============
 
-MIPT Schedule repo
+Moscow Institute of Physics and Technology schedule repo
