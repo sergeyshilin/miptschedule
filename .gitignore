@@ -1,0 +1,5 @@
+utils/SQLConfig.php
+mobile/utils/SQLConfig.php
+admin.php
+schedules/*
+!empty
