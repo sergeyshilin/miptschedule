@@ -21,9 +21,46 @@ html, body {
  */
 
 #header {
+	margin: 0 auto;
+	width: 815px;
+	height: 40px;
+	background: url('../images/header-border.png') no-repeat bottom;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+	color: #444;
+}
+
+#header a {
+	text-decoration: none;
+	color: #333;
+}
+
+#leftblock {
+	width: auto;
+	float: left;
+	margin: 7px 0 0 20px;
+}
+
+#loginbuttons {
+	width: auto;
+	float: right;
+	margin: 7px 12px 0 0;
+}
+
+#loginbuttons .button {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	cursor: pointer;
+}
+
+
+
+#logo {
 	/*padding-top:;*/
 	width: 100%;
-	height: 120px;
+	height: 105px;
 	background: url('../images/header.png') no-repeat bottom;
 	/*border: 1px solid red;*/
 }
@@ -135,6 +172,7 @@ html, body {
 	background-color: #e6faff;
 	width: 100%;
 	display: table-row;
+	min-height: 18px;
 }
 
 .pair:hover {
@@ -144,6 +182,7 @@ html, body {
 .pairtime {
 	padding-left: 4px;
 	width: 55px;
+	height: 32px;
 	display: table-cell;
 	vertical-align: middle;
 	font-size: 16px;
@@ -153,8 +192,9 @@ html, body {
 }
 
 .pairname {
-	padding: 5px;
+	/*padding: 5px;*/
 	width: 193px;
+	height: 32px;
 	display: table-cell;
 	color: #333;
 	text-align: center;
@@ -163,6 +203,23 @@ html, body {
 	font-size: 13px;
 	border-bottom: 1px solid #444;
 	text-shadow: 1px 1px 2px rgba(220, 220, 220, 1);
+}
+
+.pair .half {
+	min-height: 18px !important;
+	height: 18px;
+}
+
+.pair .halftime {
+	min-height: 19px !important;
+	height: 19px;
+	position: absolute;
+	width: 54px;
+}
+
+.pair .sechalftime {
+	min-height: 19px !important;
+	height: 19px;
 }
 
 /**
@@ -176,8 +233,10 @@ html, body {
 
 #footer hr {
 	width: 850px;
+	height: 10px;
 	border: 0;
-	border-bottom: 3px dashed #444 !important;
+	/*border-bottom: 3px dashed #444 !important;*/
+	background: url('../images/header-border.png') no-repeat top;
 }
 
 #footer #author {
@@ -214,6 +273,273 @@ html, body {
 }
 
 /**
+ * POPUP
+ */
+
+#opaco {
+	background-color: #000000;
+	left: 0;
+	opacity: 0.7;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 10;
+}
+
+.info {
+	background-color: #000 !important;
+	opacity: 0.1 !important;
+}
+
+#popup {
+	background-color: #000000;
+	position: fixed;
+	/*width:300px;*/
+	left:50%;
+	top:50%;
+	right: 50% !important;
+	min-width: 300px;
+	z-index: 11;
+	opacity: 0.8;
+    box-shadow:	0pt 2px 5px rgba(0, 0, 0,  0.7);
+    border-radius: 5px;
+}
+
+#login-block .bug {
+	padding:10px;
+	position: relative;
+	z-index: 20;
+	color: #fff;
+	opacity: 0.8; /* CSS3 - Mozilla 1.7b +, Firefox 0.9 +, Safari 1.2+, Opera 9+ */
+}
+
+#popup h1, 
+.popup-window h1 {
+    font-size: 38px;
+    color: rgb(126, 158, 48);
+    font-family: 'Oswald',Arial,Helvetica,sans-serif;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 10px #4d4d4d;
+    margin: 0 0 7px 0;
+    padding: 0;
+}
+
+.popup-window h1 {
+	font-size: 27px !important;
+	padding-bottom: 6px;
+}
+
+#popup hr, 
+.popup-window hr {
+	width: 100%;
+	height: 1px;
+	background-image: url('../images/popup-hr.png');
+    background-repeat: no-repeat;
+    background-position: center;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+#popup p, 
+.popup-window p {
+	margin: 0;
+	padding: 7px 0 0 0;
+}
+
+#popup .label_text,
+.popup-window .label_text {
+	margin-left: 10px;
+	font-size: 14px;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	color: #ddd;
+}
+
+.popup-window .label_text {
+	font-size: 13px !important;
+}
+ 
+#popup input:not([type="checkbox"]),
+.popup-window input:not([type="checkbox"]) {
+    width: 242px;
+    height: 20px;
+    margin-top: 4px;
+    margin-left: 10px;
+    padding: 8px 5px 8px 32px;
+    border: 1px solid rgb(178, 178, 178);
+    border-radius: 3px;
+    background-color: #d1d1d1;
+    box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.6) inset;
+}
+
+.popup-window input:not([type="checkbox"]) {
+	width: 202px;
+	height: 15px !important;
+}
+
+
+#popup input:not([type="checkbox"]):active,
+#popup input:not([type="checkbox"]):focus, 
+.popup-window input:not([type="checkbox"]):active,
+.popup-window input:not([type="checkbox"]):focus {
+    border: 2px solid rgba(126, 158, 48, 0.7);
+    box-shadow: 0px 1px 4px 0px rgba(168, 168, 168, 0.9) inset;
+    height: 18px;
+    width: 240px;
+}
+
+.popup-window input:not([type="checkbox"]):active,
+.popup-window input:not([type="checkbox"]):focus {
+	width: 200px;
+	height: 13px !important;
+}
+
+/**** advanced input styling ****/
+/* placeholder */
+::-webkit-input-placeholder  {
+    color: rgb(128, 128, 128);
+    font-style: italic;
+}
+input:-moz-placeholder,
+textarea:-moz-placeholder{
+    color: rgb(190, 188, 188);
+    font-style: italic;
+}
+input {
+  outline: none;
+}
+
+#popup p.button, .popup-window p.button {
+	width: 300px;
+	display: inline-block;
+	position: relative;
+	padding-bottom: 5px !important;
+}
+
+.popup-window p.button {
+	width: 261px !important;
+}
+
+#popup p.button input, .popup-window p.button input {
+    margin: 0 10px 10px 0;
+    cursor: pointer;
+    background: rgb(126, 158, 48);
+    padding: 5px 7px;
+    font-family: 'BebasNeueRegular','Arial Narrow',Arial,sans-serif;
+    color: #ddd;
+    font-size: 18px;
+    border: 1px solid rgb(104, 130, 40);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    box-shadow: 0px 1px 1px 0px rgb(126, 158, 48);
+   	transition: all 0.2s linear;
+}
+
+p.button input#loginb {
+    float: right;
+    margin: 5px 10px 5px 0;
+    width: 70px;
+    height: 30px;
+}
+
+p.button input#registerb {
+	float: left;
+	margin: 5px 0 5px 10px;
+    width: 130px;
+    height: 30px;
+}
+
+p.button input#editb {
+ 	float: right;
+    margin: 5px 10px 5px 0;
+    width: 104px;
+    height: 30px !important;
+}
+
+p.button input#changeb {
+ 	float: right;
+    margin: 5px 10px 5px 0;
+    width: 104px;
+    height: 30px !important;
+}
+
+#popup p.button input:hover,
+.popup-window p.button input:hover {
+    background: rgb(147, 183, 56);
+}
+
+#popup p.button input:active,
+#popup p.button input:focus,
+.popup-window p.button input:active,
+.popup-window p.button input:focus {
+    background: rgb(104, 130, 40);
+    box-shadow: 0px 1px 6px 4px rgba(0, 0, 0, 0.2) inset;
+    padding: 4px 7px;
+}
+
+#popup p.button input#loginb:active,
+#popup p.button input#loginb:focus {
+	width: 70px;
+    height: 30px;
+}
+
+#popup p.button input#registerb:active,
+#popup p.button input#registerb:focus {
+	width: 130px;
+    height: 30px;
+}
+
+
+.keeplogin input,
+.keeplogin label {
+    display: inline-block;
+    font-size: 13px;
+    font-style: italic;
+    color: #ddd;
+}
+
+.keeplogin input#loginkeeping {
+	margin-left: 10px;
+    margin-right: 5px;
+}
+
+.keeplogin label {
+    width: 80%;
+}
+
+#noway, #yesway, #report, #editreport, #changepassreport {
+	display: none;
+}
+
+#report.error_text, 
+#editreport.error_text,
+#changepassreport.error_text {
+	color: rgb(212, 0, 0); 
+	font-size: 17px; 
+	font-family: 'BebasNeueRegular','Arial Narrow',Arial,sans-serif;
+	text-shadow: 2px 2px 7px rgb(232, 0, 0);
+    text-align: center;
+    padding-bottom: 7px;
+}
+
+#report.success_text,
+#editreport.success_text,
+#changepassreport.success_text {
+	color: rgb(160, 198, 61); 
+	font-size: 17px; 
+	font-family: 'BebasNeueRegular','Arial Narrow',Arial,sans-serif;
+	text-shadow: 2px 2px 7px rgb(180, 224, 69);
+    text-align: center;
+    padding-bottom: 7px;
+}
+
+.hidden {
+	display: none;
+}
+
+
+/**
  * Schedule.php style
  */
 
@@ -229,4 +555,103 @@ html, body {
 	width: 250px;
 	height: 42px;
 	padding: 10px 0;
+}
+
+/**
+ * TOOLTIP
+ */
+
+/*layout css*/
+.tooltip {
+    color: #ccc;
+}
+
+label { display:block}
+
+
+/*themes css*/
+.liTipContent {
+    font: 11px/1.2em Arial, Helvetica, sans-serif;
+    position: absolute;
+}
+
+.liTipHide {
+    left: -99999px;
+    top: -99999px;
+}
+
+.liTipInner {
+	padding: 5px;
+}
+
+.liTipCone {
+    height: 8px;
+    left: 50%;
+    margin: 0 0 0 -6px;
+    position: absolute;
+    width: 12px;
+}
+
+.liTipPosbottom .liTipCone {
+    background-position: 0 0;
+    top: -8px;
+}
+
+.liTipPostop .liTipCone {
+    background-position: 0 -8px;
+    bottom: -8px;
+}
+
+.liTipPosright .liTipCone {
+	right: -8px;
+}
+
+/*theme liTipBorderBlack only*/
+.liTipBorderBlack .liTipCone {
+    background-color: #000;
+	opacity: 0.1;
+}
+
+.liTipBorderBlack {
+	width: 545px;
+	padding-top: 10px;
+    background-color: #000;
+	opacity: 0.95;
+    color: #ccc;
+    box-shadow:	0pt 2px 5px rgba(0, 0, 0,  0.7);
+}
+
+.liTipBorderBlack.liTipPosbottom .liTipCone {
+    top: -11px;
+}
+
+.liTipBorderBlack.liTipPostop .liTipCone {
+    bottom: -11px;
+}
+
+.liTipBorderBlack .liTipInner {
+    padding: 10px;
+}
+
+.liTipColored {
+	min-width: 50px;
+	width: auto;
+    background-color: #fff;
+	opacity: 0.95;
+    color: #333;
+    box-shadow:	0pt 2px 5px rgba(0, 0, 0,  0.5);
+    text-align: center;
+}
+
+/**
+ * EDITFORM
+ */
+
+#editform {
+	float: left;
+}
+
+#changepassform {
+	float: right;
+	border-left: 1px solid rgb(126, 158, 48);
 }

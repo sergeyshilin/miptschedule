@@ -1,12 +1,17 @@
 <?php 
+	require_once("/home/snape/projects/mipt-schedule/classes/User.php");
+	$user = new User();
+
 	/**
-	* MIPT Schedule class. 
-	*/
+	 * MIPT Schedule class. 
+	 */
 	class MiptSchedule {
 
 		private $group;
 		private $schedule;
 		private $week;
+		const PAIRNAMELENGTH = 37;
+		const HALFPAIRNAMELENGTH = 27;
 		
 		public function __construct($group) {
 			require_once('/home/snape/projects/mipt-schedule/classes/Schedule.php');
@@ -65,26 +70,35 @@
 		}
 
 		private function printFirstHalfOfPair($class) {
+			$class['name'] = $this->getCuttedName($class['name'], self::HALFPAIRNAMELENGTH);
 			echo "<div class=\"pair\">";
-			echo "<div class=\"pairtime\" style=\"border-bottom:none !important\">"; 
+			echo "<div class=\"pairtime halftime\" style=\"border-bottom:none !important\">"; 
 			echo ScheduleUtils::getPairTime($class["pair"]); 
 			echo "</div>";
-			echo "<div class=\"pairname\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
+			echo "<div class=\"pairname half\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
 			echo "</div>";
 		}
 
 		private function printSecondHalfOfPair($class) {
+			$class['name'] = $this->getCuttedName($class['name'], self::HALFPAIRNAMELENGTH);
 			echo "<div class=\"pair\">";
-			echo "<div class=\"pairtime\"></div>";
-			echo "<div class=\"pairname\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
+			echo "<div class=\"pairtime sechalftime\"></div>";
+			echo "<div class=\"pairname half\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
 			echo "</div>";
 		}
 
 		private function printUsuallyPair($class) {
+			$class['name'] = $this->getCuttedName($class['name'], self::PAIRNAMELENGTH);
 			echo "<div class=\"pair\">";
 			echo "<div class=\"pairtime\">" . ScheduleUtils::getPairTime($class["pair"]) . "</div>";
 			echo "<div class=\"pairname\" style=\"background-color: " . $class["color"] . " !important\">".$class["name"]."</div>";
 			echo "</div>";
+		}
+
+		private function getCuttedName($name, $size) {
+			if(mb_strlen($name, 'UTF-8') > $size)
+				$name = mb_substr($name, 0, mb_strrpos(mb_substr($name, 0, $size,'utf-8'),' ','utf-8'),'utf-8')."<a href='#' title='".$name."' class='tooltip-right'>...</a>";
+			return $name;
 		}
 
 		// public function printScheduleForDay($day) {

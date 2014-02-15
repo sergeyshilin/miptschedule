@@ -7,28 +7,26 @@ var prevgroup = 0;
 
 function setCourse(_course) {
     course = _course;
-    var inputs = document.getElementById("course").getElementsByTagName("input");
-    for (var i = 0; i < inputs.length; i++) {
-        if(inputs[i].name == course) {
-            inputs[i].className = "course-hover";    
-        } else if(inputs[i].name == prevcourse) {
-            inputs[i].className = "";
+    $("#course").children("input").each(function() {
+        if(this.name == course) {
+            this.className = "course-hover";    
+        } else if(this.name == prevcourse) {
+            this.className = "";
         }
-    };
+    });
     prevcourse = course;
     syncSelect(faculty, course);
 }
 
 function setFaculty(_faculty) {
     faculty = _faculty;
-    var inputs = document.getElementById("faculty").getElementsByTagName("input");
-    for (var i = 0; i < inputs.length; i++) {
-        if(inputs[i].name == faculty) {
-            inputs[i].className = "faculty-hover";    
-        } else if(inputs[i].name == prevfaculty) {
-            inputs[i].className = "";
+    $("#faculty").children("input").each(function() {
+        if(this.name == faculty) {
+            this.className = "faculty-hover";    
+        } else if(this.name == prevfaculty) {
+            this.className = "";
         }
-    };
+    });
     prevfaculty = faculty;
     syncSelect(faculty, course);
 }
@@ -40,11 +38,9 @@ function syncSelect(_faculty, _course) {
         data: {faculty : _faculty, course: _course},
         success: function(result) {
         	var jsArr = result.split(",");
-        	// console.log(jsArr);
         	var group = document.getElementById("group");
             group.innerHTML = "";
 			for (var i = 0; i < jsArr.length; i++) {
-                // console.log(jsArr[i]);
                 var input = document.createElement("input");
                 input.setAttribute("type", "button");
                 input.setAttribute("name", jsArr[i]);
@@ -62,18 +58,8 @@ function syncSelect(_faculty, _course) {
 }
 
 function getData(_group) {
-    // console.log("group: " + _group);
     group = _group;
-    var inputs = document.getElementById("group").getElementsByTagName("input");
-    for (var i = 0; i < inputs.length; i++) {
-        // console.log("name: " + inputs[i].name);
-        if(inputs[i].name == group) {
-            inputs[i].className = "group-hover";    
-        } else if(inputs[i].name == prevgroup) {
-            inputs[i].className = "";
-        }
-    } 
-    prevgroup = group;
+    
     $.ajax({
         type: "POST",
         data: {group: _group},
@@ -82,6 +68,27 @@ function getData(_group) {
         beforeSend: function() { $('#schedule').html('<div id="loader"></div>'); },
         success: function(html) {
             $('#schedule').html(html);
+
+            $("#group").children("input").each(function() {
+                if(!this.name.localeCompare(group)) {
+                    this.className = "group-hover";    
+                } else if(!this.name.localeCompare(prevgroup)) {
+                    this.className = "";
+                }
+            });
+
+            $('.tooltip-right').liTip({
+                themClass: 'liTipColored',
+                timehide: 500,
+                posY: 'bottom',
+                radius: '5px',
+                maxWidth: '150px',
+                tipEvent: 'click',
+                colored: true,
+                content: false
+            });
+
+            prevgroup = group;
         }
-    });
+    });   
 }

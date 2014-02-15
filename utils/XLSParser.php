@@ -7,6 +7,7 @@
 
 		private $error;
 		private $file;
+		private $name;
 		private $course;
 		private $connection;
 		const PATHDIR = "schedules/";
@@ -23,23 +24,13 @@
 			$this->course = $course;
 			$this->half = 0;
 
-			$this->setConnection();
-			// $this->name = self::PATHDIR . $year . "_" . $season . "_" . $course . $this->getExtention($file['name']);
-			// $this->name = "schedules/2013-2014_autumn_3.xls";
-			// $this->saveXLSFile();
+			$this->name = self::PATHDIR . $year . "_" . $season . "_" . $course . $this->getExtention($file['name']);
+			$this->saveXLSFile();
+			$this->xlsToSQL();
 		}
 
 		public function __destruct() {
-			$this->closeConnection();
-		}
 
-		private function setConnection() {
-			$this->connection = mysql_connect(SQLConfig::SERVERNAME, SQLConfig::USER, SQLConfig::PASSWORD);
-			mysql_select_db(SQLConfig::DATABASE);
-		}
-
-		private function closeConnection() {
-			mysql_close($this->connection);
 		}
 
 		private function clearDataBase($course) {
@@ -50,16 +41,16 @@
 			echo "Databese for " . $course . " course was successfully cleared </br>";
 		}
 
-		public function xlsToSQL($course, $name) {
-			$this->clearDataBase($course);
+		public function xlsToSQL() {
+			$this->clearDataBase($this->course);
 			try {
-			    $inputFileType = PHPExcel_IOFactory::identify($name);
+			    $inputFileType = PHPExcel_IOFactory::identify($this->name);
 			    $objReader = PHPExcel_IOFactory::createReader($inputFileType);
 				$objReader->setReadDataOnly(false);
-			    $objPHPExcel = $objReader->load($name);
+			    $objPHPExcel = $objReader->load($this->name);
 			    unset($objReader);
 			} catch(Exception $e) {
-			    die('Error loading file "'.pathinfo($name, PATHINFO_BASENAME).'": '.$e->getMessage());
+			    die('Error loading file "'.pathinfo($this->name, PATHINFO_BASENAME).'": '.$e->getMessage());
 			}
 
 			$sheet = $objPHPExcel->getActiveSheet();
@@ -74,7 +65,7 @@
 					continue;
 				for($row = self::FIRSTROW; $row <= $lastrow; $row++) {					
 					$cell = $this->getCellValue($sheet, $column, $row);
-					$this->addCellToSQL($sheet, $course, $cell, $column, $row);
+					$this->addCellToSQL($sheet, $this->course, $cell, $column, $row);
 				}
 			}
 			echo $name . " SUCCESS!</br>";
@@ -158,13 +149,6 @@
 	        }
 
 	        $val = $cell->getValue();
-	        // if(PHPExcel_Shared_Date::isDateTime($cell)) {
-	        //      $val = date($format, PHPExcel_Shared_Date::ExcelToPHP($val)); 
-	        // }
-	        
-	        // if((substr($val,0,1) === '=' ) && (strlen($val) > 1)){
-	        //     $val = $cell->getOldCalculatedValue();
-	        // }
 
 	        return $val;
     	}
